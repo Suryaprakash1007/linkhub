@@ -239,6 +239,7 @@ public class LinkService {
 
         return linkMapper.toResponse(updatedLink);
     }
+    @org.springframework.transaction.annotation.Transactional
     public void deleteLink(Long id) {
 
         User currentUser = userService.getCurrentUser();
@@ -252,6 +253,12 @@ public class LinkService {
             throw new ResponseStatusException(
                     HttpStatus.FORBIDDEN,
                     "You can only delete your own links.");
+        }
+
+        // Fix Foreign Key Constraint Error:
+        // Remove link from all collections that own it
+        for (com.example.linkhubbackend.entity.LinkCollection collection : link.getCollections()) {
+            collection.getLinks().remove(link);
         }
 
         linkRepository.delete(link);
