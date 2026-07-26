@@ -217,7 +217,76 @@ export default function MyLinks() {
                     <Plus size={18} />
                     Create Link
                 </button>
-</div>
+            </div>
+
+            {/* Controls Bar */}
+            <div className="flex flex-col md:flex-row items-center gap-4 mb-6">
+                {/* Search Bar */}
+                <div className="relative flex-1 w-full">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" size={18} />
+                    <input
+                        type="text"
+                        placeholder="Search your links by title, url, or alias..."
+                        value={search}
+                        onChange={(e) => {
+                            setSearch(e.target.value);
+                            handleSearch(e.target.value, 0);
+                        }}
+                        className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all"
+                    />
+                    {search && (
+                        <button
+                            onClick={() => {
+                                setSearch("");
+                                fetchLinks(0);
+                            }}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                        >
+                            <X size={16} />
+                        </button>
+                    )}
+                </div>
+
+                {/* Filter and View Toggles */}
+                <div className="flex items-center gap-2 w-full md:w-auto">
+                    <select
+                        value={filter}
+                        onChange={(e) => handleFilter(e.target.value, 0)}
+                        className="flex-1 md:flex-none px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 appearance-none cursor-pointer"
+                    >
+                        <option value="all">All Links</option>
+                        <option value="favorites">Favorites</option>
+                        <option value="pinned">Pinned</option>
+                        <option value="active">Active</option>
+                        <option value="expired">Expired</option>
+                        <option value="auto">Auto-Generated</option>
+                        <option value="custom">Custom Alias</option>
+                    </select>
+
+                    <div className="flex items-center bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-xl p-1">
+                        <button
+                            onClick={() => setViewMode("list")}
+                            className={`p-2 rounded-lg transition-all ${
+                                viewMode === "list"
+                                    ? "bg-slate-100 dark:bg-slate-700 text-blue-600"
+                                    : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                            }`}
+                        >
+                            <List size={18} />
+                        </button>
+                        <button
+                            onClick={() => setViewMode("grid")}
+                            className={`p-2 rounded-lg transition-all ${
+                                viewMode === "grid"
+                                    ? "bg-slate-100 dark:bg-slate-700 text-blue-600"
+                                    : "text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
+                            }`}
+                        >
+                            <Grid3X3 size={18} />
+                        </button>
+                    </div>
+                </div>
+            </div>
 
             {/* Content */}
             {loading ? (
