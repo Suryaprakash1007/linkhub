@@ -4,14 +4,14 @@
   <p><strong>A Modern, AI-Powered Bookmark & Link Management System</strong></p>
   
   <p>
-    <a href="https://github.com/YOUR-USERNAME/linkhub/commits/main">
-      <img src="https://img.shields.io/github/last-commit/YOUR-USERNAME/linkhub.svg?style=flat-square&color=blue" alt="Last Commit" />
+    <a href="https://github.com/Suryaprakash1007/linkhub/commits/main">
+      <img src="https://img.shields.io/github/last-commit/Suryaprakash1007/linkhub.svg?style=flat-square&color=blue" alt="Last Commit" />
     </a>
-    <a href="https://github.com/YOUR-USERNAME/linkhub/issues">
-      <img src="https://img.shields.io/github/issues/YOUR-USERNAME/linkhub.svg?style=flat-square&color=orange" alt="Issues" />
+    <a href="https://github.com/Suryaprakash1007/linkhub/issues">
+      <img src="https://img.shields.io/github/issues/Suryaprakash1007/linkhub.svg?style=flat-square&color=orange" alt="Issues" />
     </a>
-    <a href="https://github.com/YOUR-USERNAME/linkhub/stargazers">
-      <img src="https://img.shields.io/github/stars/YOUR-USERNAME/linkhub.svg?style=flat-square&color=yellow" alt="Stars" />
+    <a href="https://github.com/Suryaprakash1007/linkhub/stargazers">
+      <img src="https://img.shields.io/github/stars/Suryaprakash1007/linkhub.svg?style=flat-square&color=yellow" alt="Stars" />
     </a>
   </p>
 </div>
@@ -64,7 +64,7 @@ Whether you're a developer saving documentation, a student organizing research, 
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/YOUR-USERNAME/linkhub.git
+   git clone https://github.com/Suryaprakash1007/linkhub.git
    cd linkhub
    ```
 
@@ -100,5 +100,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 <div align="center">
-  <i>Built with passion and coffee by <a href="https://github.com/YOUR-USERNAME">Suryaprakash</a></i>
+  <i>Built with passion and coffee by <a href="https://github.com/Suryaprakash1007">Suryaprakash</a></i>
 </div>
