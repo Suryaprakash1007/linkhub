@@ -88,6 +88,7 @@ public class CategoryService {
 
         return mapToResponse(updated);
     }
+    @org.springframework.transaction.annotation.Transactional
     public void deleteCategory(Long id) {
 
         User currentUser = userService.getCurrentUser();
@@ -97,6 +98,12 @@ public class CategoryService {
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND,
                         "Category not found."));
+
+        if (category.getLinks() != null) {
+            for (com.example.linkhubbackend.entity.Link link : category.getLinks()) {
+                link.setCategory(null);
+            }
+        }
 
         categoryRepository.delete(category);
     }
