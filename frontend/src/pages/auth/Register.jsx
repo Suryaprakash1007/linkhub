@@ -285,7 +285,7 @@ export default function Register() {
 
                         <button
                             type="button"
-                            onClick={() => window.location.href = 'http://localhost:8080/oauth2/authorization/google'}
+                            onClick={() => window.location.href = `${import.meta.env.VITE_API_BASE_URL || 'http://localhost:8080'}/oauth2/authorization/google`}
                             className="w-full py-3 bg-white border-2 border-slate-200 rounded-xl text-slate-700 font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all flex items-center justify-center gap-3 shadow-sm"
                         >
                             <svg className="w-5 h-5" viewBox="0 0 24 24">
