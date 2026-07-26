@@ -61,7 +61,7 @@ public class User {
     private Boolean emailVerified = false;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(columnDefinition = "varchar(255) default 'LOCAL'")
     @Builder.Default
     private AuthProvider authProvider = AuthProvider.LOCAL;
 
