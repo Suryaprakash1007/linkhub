@@ -24,6 +24,24 @@ public class CategoryController {
         this.linkCategoryService = linkCategoryService;
     }
 
+    @PutMapping("/{categoryId}/assign/{linkId}")
+    public ResponseEntity<LinkResponse> assignLinkToCategory(
+            @PathVariable Long categoryId,
+            @PathVariable Long linkId) {
+
+        return ResponseEntity.ok(
+                linkCategoryService.assignCategory(linkId, categoryId));
+    }
+
+    @DeleteMapping("/{categoryId}/remove/{linkId}")
+    public ResponseEntity<LinkResponse> removeLinkFromCategory(
+            @PathVariable Long categoryId,
+            @PathVariable Long linkId) {
+
+        return ResponseEntity.ok(
+                linkCategoryService.removeCategory(linkId));
+    }
+
     @PostMapping
     public ResponseEntity<CategoryResponse> createCategory(
             @Valid @RequestBody CreateCategoryRequest request) {

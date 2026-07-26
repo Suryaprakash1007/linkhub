@@ -11,5 +11,7 @@ public class TagResponse {
 
     private String name;
 
+    private String description;
+
     private Long totalLinks;
 }

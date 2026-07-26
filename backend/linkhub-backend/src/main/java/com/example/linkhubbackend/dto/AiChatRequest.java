@@ -1,0 +1,8 @@
+package com.example.linkhubbackend.dto;
+
+import lombok.Data;
+
+@Data
+public class AiChatRequest {
+    private String message;
+}

@@ -20,6 +20,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final UserService userService;
+    private final LikeRepository likeRepository;
 
     public PostService(PostRepository postRepository,
                        UserService userService,
@@ -109,6 +110,7 @@ public class PostService {
                 .createdAt(updatedPost.getCreatedAt())
                 .build();
     }
+    @org.springframework.transaction.annotation.Transactional
     public void deletePost(Long id) {
 
         User currentUser = userService.getCurrentUser();
@@ -120,9 +122,12 @@ public class PostService {
             throw new AccessDeniedException("You can only delete your own posts.");
         }
 
+        // Delete all likes first to avoid FK constraint violation
+        likeRepository.deleteByPost(post);
+
         postRepository.delete(post);
     }
-    private final LikeRepository likeRepository;
+
     public void likePost(Long postId) {
 
         User currentUser = userService.getCurrentUser();
@@ -141,6 +146,8 @@ public class PostService {
 
         likeRepository.save(like);
     }
+
+    @org.springframework.transaction.annotation.Transactional
     public void unlikePost(Long postId) {
 
         User user = userService.getCurrentUser();

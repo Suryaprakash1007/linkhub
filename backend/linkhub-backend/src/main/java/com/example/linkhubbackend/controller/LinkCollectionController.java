@@ -54,6 +54,25 @@ public class LinkCollectionController {
 
         return ResponseEntity.noContent().build();
     }
+
+    @PutMapping("/{collectionId}/assign/{linkId}")
+    public ResponseEntity<LinkCollectionResponse> assignLinkToCollection(
+            @PathVariable Long collectionId,
+            @PathVariable Long linkId) {
+
+        return ResponseEntity.ok(
+                linkCollectionService.addLinkToCollection(collectionId, linkId));
+    }
+
+    @DeleteMapping("/{collectionId}/remove/{linkId}")
+    public ResponseEntity<LinkCollectionResponse> removeLinkFromCollection(
+            @PathVariable Long collectionId,
+            @PathVariable Long linkId) {
+
+        return ResponseEntity.ok(
+                linkCollectionService.removeLinkFromCollection(collectionId, linkId));
+    }
+
     @GetMapping("/{collectionId}/links")
     public ResponseEntity<List<LinkResponse>> getCollectionLinks(
             @PathVariable Long collectionId) {

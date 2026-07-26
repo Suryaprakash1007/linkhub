@@ -35,6 +35,7 @@ public class TagService {
 
         Tag tag = Tag.builder()
                 .name(request.getName())
+                .description(request.getDescription())
                 .user(currentUser)
                 .build();
 
@@ -70,6 +71,7 @@ public class TagService {
         }
 
         tag.setName(request.getName());
+        tag.setDescription(request.getDescription());
 
         Tag updated = tagRepository.save(tag);
 
@@ -91,6 +93,7 @@ public class TagService {
         return TagResponse.builder()
                 .id(tag.getId())
                 .name(tag.getName())
+                .description(tag.getDescription())
                 .totalLinks((long) tag.getLinks().size())
                 .build();
     }

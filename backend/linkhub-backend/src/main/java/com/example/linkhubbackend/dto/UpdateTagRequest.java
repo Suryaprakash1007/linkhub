@@ -12,4 +12,6 @@ public class UpdateTagRequest {
     @NotBlank(message = "Tag name is required.")
     @Size(max = 50)
     private String name;
+
+    private String description;
 }

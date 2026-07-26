@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: linkhub-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: linkhub_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-linkhub_secret_2024}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: linkhub-app
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/linkhub_db
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: ${DB_PASSWORD:-linkhub_secret_2024}
+      JWT_SECRET: ${JWT_SECRET:-mySuperSecretKeyForJwtAuthentication12345678901234567890}
+      JWT_EXPIRATION: ${JWT_EXPIRATION:-86400000}
+      APP_CORS_ALLOWED_ORIGINS: ${CORS_ORIGINS:-http://localhost:5173,http://localhost:3000}
+      APP_BASE_URL: ${APP_BASE_URL:-http://localhost}
+    ports:
+      - "80:80"
+      - "8080:8080"
+
+volumes:
+  postgres_data:

@@ -35,11 +35,16 @@ public class RedirectController {
     }
     @GetMapping("/{code}/qrcode")
     public ResponseEntity<byte[]> generateQRCode(
-            @PathVariable String code)
+            @PathVariable String code,
+            HttpServletRequest request)
             throws Exception {
 
-        String shortUrl =
-                "http://localhost:8080/api/links/" + code;
+        String baseUrl = String.format("%s://%s:%d",
+                request.getScheme(),
+                request.getServerName(),
+                request.getServerPort());
+
+        String shortUrl = baseUrl + "/r/" + code;
 
         byte[] qrCode = qrCodeService.generateQRCode(shortUrl);
 

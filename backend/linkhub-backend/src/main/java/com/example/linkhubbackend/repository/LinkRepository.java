@@ -26,22 +26,24 @@ public interface LinkRepository extends JpaRepository<Link, Long> {
     Optional<Link> findByShortCodeOrCustomAlias(String shortCode, String customAlias);
     List<Link> findByUserOrderByCreatedAtDesc(User user);
     Page<Link> findByUser(User user, Pageable pageable);
-    List<Link> findByUserAndIsActiveOrderByCreatedAtDesc(User user, Boolean isActive);
+    Page<Link> findByUserAndIsActiveOrderByCreatedAtDesc(User user, Boolean isActive, Pageable pageable);
 
-    List<Link> findByUserAndExpirationDateBeforeOrderByCreatedAtDesc(
+    Page<Link> findByUserAndExpirationDateBeforeOrderByCreatedAtDesc(
             User user,
-            LocalDateTime dateTime);
+            LocalDateTime dateTime,
+            Pageable pageable);
 
-    List<Link> findByUserAndExpirationDateAfterOrderByCreatedAtDesc(
+    Page<Link> findByUserAndExpirationDateAfterOrderByCreatedAtDesc(
             User user,
-            LocalDateTime dateTime);
+            LocalDateTime dateTime,
+            Pageable pageable);
 
-    List<Link> findByUserAndCustomAliasIsNotNullOrderByCreatedAtDesc(User user);
+    Page<Link> findByUserAndCustomAliasIsNotNullOrderByCreatedAtDesc(User user, Pageable pageable);
 
-    List<Link> findByUserAndCustomAliasIsNullOrderByCreatedAtDesc(User user);
-    List<Link> findByUserAndIsFavoriteTrueOrderByCreatedAtDesc(User user);
+    Page<Link> findByUserAndCustomAliasIsNullOrderByCreatedAtDesc(User user, Pageable pageable);
+    Page<Link> findByUserAndIsFavoriteTrueOrderByCreatedAtDesc(User user, Pageable pageable);
     List<Link> findByCategoryOrderByCreatedAtDesc(Category category);
-    List<Link> findByUserAndIsPinnedTrueOrderByCreatedAtDesc(User user);
+    Page<Link> findByUserAndIsPinnedTrueOrderByCreatedAtDesc(User user, Pageable pageable);
     long countByUser(User user);
 
     long countByUserAndIsActiveTrue(User user);
@@ -62,7 +64,8 @@ OR LOWER(l.notes) LIKE LOWER(CONCAT('%', :keyword, '%'))
 )
 ORDER BY l.createdAt DESC
 """)
-    List<Link> searchLinks(
+    Page<Link> searchLinks(
             @Param("user") User user,
-            @Param("keyword") String keyword);
+            @Param("keyword") String keyword,
+            Pageable pageable);
 }

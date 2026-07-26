@@ -1,5 +1,6 @@
 package com.example.linkhubbackend.entity;
 import com.example.linkhubbackend.enums.Role;
+import com.example.linkhubbackend.enums.AuthProvider;
 import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,6 +23,9 @@ public class User {
     private Long id;
     @Column(nullable = false, length = 100)
     private String fullName;
+
+    @Column(unique = true, length = 100)
+    private String username;
 
     @Column(nullable = false, unique = true, length = 100)
     private String email;
@@ -51,6 +55,23 @@ public class User {
     @Column(nullable = false)
     private Boolean isActive;
 
+    // ── Email Verification ──────────────────────────────────────────────────
+    @Column(nullable = false)
+    @Builder.Default
+    private Boolean emailVerified = false;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    @Builder.Default
+    private AuthProvider authProvider = AuthProvider.LOCAL;
+
+    @Column(length = 255)
+    private String emailVerificationToken;
+
+    @Column
+    private LocalDateTime emailVerificationTokenExpiry;
+    // ────────────────────────────────────────────────────────────────────────
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
@@ -58,8 +79,10 @@ public class User {
     private LocalDateTime updatedAt;
     @PrePersist
     public void prePersist() {
-        this.role = Role.USER;
-        this.isActive = true;
+        if (this.role == null) this.role = Role.USER;
+        if (this.isActive == null) this.isActive = true;
+        if (this.emailVerified == null) this.emailVerified = false;
+        if (this.authProvider == null) this.authProvider = AuthProvider.LOCAL;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }

@@ -12,6 +12,9 @@ public class UpdateProfileRequest {
     @Size(max = 100)
     private String fullName;
 
+    @Size(max = 100)
+    private String username;
+
     @Size(max = 255)
     private String bio;
 

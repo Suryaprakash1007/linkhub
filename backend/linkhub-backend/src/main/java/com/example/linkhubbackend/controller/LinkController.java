@@ -3,8 +3,10 @@ package com.example.linkhubbackend.controller;
 import com.example.linkhubbackend.dto.*;
 import com.example.linkhubbackend.service.LinkCategoryService;
 import com.example.linkhubbackend.service.LinkService;
+import com.example.linkhubbackend.service.QRCodeService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
@@ -31,16 +33,19 @@ public class LinkController {
 
     private final LinkTagService linkTagService;
 
+    private final QRCodeService qrCodeService;
 
 
     public LinkController(
             LinkService linkService,
             LinkCategoryService linkCategoryService,
-            LinkTagService linkTagService) {
+            LinkTagService linkTagService,
+            QRCodeService qrCodeService) {
 
         this.linkService = linkService;
         this.linkCategoryService = linkCategoryService;
         this.linkTagService = linkTagService;
+        this.qrCodeService = qrCodeService;
     }
 
 
@@ -72,15 +77,6 @@ public class LinkController {
             @ApiResponse(responseCode = "302", description = "Redirect successful"),
             @ApiResponse(responseCode = "404", description = "Link not found")
     })
-    @GetMapping("/{code}")
-    public RedirectView redirect(
-            @PathVariable String code,
-            HttpServletRequest request) {
-
-        String url = linkService.redirect(code, request);
-
-        return new RedirectView(url);
-    }
     @GetMapping
     public ResponseEntity<Page<LinkResponse>> getMyLinks(
 
@@ -107,13 +103,8 @@ public class LinkController {
     public ResponseEntity<LinkResponse> updateLink(
             @PathVariable Long id,
             @Valid @RequestBody UpdateLinkRequest request) {
-        System.out.println("SERVICE START");
-
-        System.out.println("BEFORE SERVICE");
 
         LinkResponse response = linkService.updateLink(id, request);
-
-        System.out.println("AFTER SERVICE");
 
         return ResponseEntity.ok(response);
     }
@@ -125,36 +116,59 @@ public class LinkController {
         return ResponseEntity.noContent().build();
     }
     @GetMapping("/search")
-    public ResponseEntity<List<LinkResponse>> searchLinks(
-            @RequestParam String keyword) {
-
-        return ResponseEntity.ok(linkService.searchLinks(keyword));
+    public ResponseEntity<Page<LinkResponse>> searchLinks(
+            @RequestParam String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.searchLinks(keyword, page, size, sort, direction));
     }
+
     @GetMapping("/filter/status")
-    public ResponseEntity<List<LinkResponse>> filterByStatus(
-            @RequestParam Boolean active) {
-
-        return ResponseEntity.ok(linkService.filterByStatus(active));
+    public ResponseEntity<Page<LinkResponse>> filterByStatus(
+            @RequestParam Boolean active,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.filterByStatus(active, page, size, sort, direction));
     }
+
     @GetMapping("/filter/expired")
-    public ResponseEntity<List<LinkResponse>> getExpiredLinks() {
-
-        return ResponseEntity.ok(linkService.getExpiredLinks());
+    public ResponseEntity<Page<LinkResponse>> getExpiredLinks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.getExpiredLinks(page, size, sort, direction));
     }
+
     @GetMapping("/filter/non-expired")
-    public ResponseEntity<List<LinkResponse>> getNonExpiredLinks() {
-
-        return ResponseEntity.ok(linkService.getNonExpiredLinks());
+    public ResponseEntity<Page<LinkResponse>> getNonExpiredLinks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.getNonExpiredLinks(page, size, sort, direction));
     }
+
     @GetMapping("/filter/custom-alias")
-    public ResponseEntity<List<LinkResponse>> getCustomAliasLinks() {
-
-        return ResponseEntity.ok(linkService.getCustomAliasLinks());
+    public ResponseEntity<Page<LinkResponse>> getCustomAliasLinks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.getCustomAliasLinks(page, size, sort, direction));
     }
-    @GetMapping("/filter/auto-generated")
-    public ResponseEntity<List<LinkResponse>> getAutoGeneratedLinks() {
 
-        return ResponseEntity.ok(linkService.getAutoGeneratedLinks());
+    @GetMapping("/filter/auto-generated")
+    public ResponseEntity<Page<LinkResponse>> getAutoGeneratedLinks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.getAutoGeneratedLinks(page, size, sort, direction));
     }
     @PutMapping("/{id}/favorite")
     public ResponseEntity<String> markAsFavorite(@PathVariable Long id) {
@@ -171,9 +185,12 @@ public class LinkController {
         return ResponseEntity.ok("Link removed from favorites.");
     }
     @GetMapping("/favorites")
-    public ResponseEntity<List<LinkResponse>> getFavoriteLinks() {
-
-        return ResponseEntity.ok(linkService.getFavoriteLinks());
+    public ResponseEntity<Page<LinkResponse>> getFavoriteLinks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.getFavoriteLinks(page, size, sort, direction));
     }
     @PutMapping("/{linkId}/category/{categoryId}")
     public ResponseEntity<LinkResponse> assignCategory(
@@ -235,10 +252,12 @@ public class LinkController {
         return ResponseEntity.ok().build();
     }
     @GetMapping("/pinned")
-    public ResponseEntity<List<LinkResponse>> getPinnedLinks() {
-
-        return ResponseEntity.ok(
-                linkService.getPinnedLinks());
+    public ResponseEntity<Page<LinkResponse>> getPinnedLinks(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdAt") String sort,
+            @RequestParam(defaultValue = "desc") String direction) {
+        return ResponseEntity.ok(linkService.getPinnedLinks(page, size, sort, direction));
     }
     @GetMapping("/dashboard")
     public DashboardResponse getDashboard() {
@@ -266,6 +285,19 @@ public class LinkController {
 
         return ResponseEntity.ok(
                 linkService.getClickHistory(id));
+    }
+
+    @GetMapping("/{id}/qrcode")
+    public ResponseEntity<byte[]> getQRCode(@PathVariable Long id) {
+        try {
+            LinkResponse link = linkService.getLinkById(id);
+            byte[] qrImage = qrCodeService.generateQRCode(link.getShortUrl());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.IMAGE_PNG)
+                    .body(qrImage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
 }

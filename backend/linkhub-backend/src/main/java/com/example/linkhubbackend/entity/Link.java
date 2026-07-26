@@ -94,7 +94,6 @@ public class Link {
     public void preUpdate() {
         updatedAt = LocalDateTime.now();
     }
-    @Column(nullable = false)
 
     @PrePersist
     public void prePersist() {

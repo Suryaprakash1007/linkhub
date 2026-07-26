@@ -15,7 +15,7 @@ public class CreateLinkRequest {
     @Size(max = 100)
     private String title;
 
-    @Size(max = 255)
+    @Size(max = 2000)
     private String description;
 
     @Size(max = 100)
