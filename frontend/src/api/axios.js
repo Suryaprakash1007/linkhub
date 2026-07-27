@@ -4,6 +4,7 @@ const api = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL || "https://linkhub-uc2w.onrender.com",
     headers: {
         "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest",
     },
 });
 
