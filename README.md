@@ -90,7 +90,7 @@ Whether you're a developer saving documentation, a student organizing research, 
      ```
 
 4. **Open your browser**
-   - The application will be running at `http://localhost:5173`
+   - The application will be running at `https://linkhub-weld-two.vercel.app`
 
 ## 🤝 Contributing
 Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/YOUR-USERNAME/linkhub/issues).
